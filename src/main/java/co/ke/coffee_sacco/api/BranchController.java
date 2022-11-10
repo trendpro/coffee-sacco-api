@@ -40,11 +40,10 @@ public class BranchController {
         branchService.updateBranch(branchId, name);
     }
 
-    @PostMapping("/sale-product")
+    @PostMapping("/sell-product")
     public void saleProduct(@RequestBody Map<String, Object> reqMap) {
-        double sellingPrice = (double) reqMap.get("sellingPrice");
+        double sellingPrice = ((Number) reqMap.get("sellingPrice")).doubleValue();
 
-//        ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
         branchService.saleProduct(sellingPrice);
     }
 }

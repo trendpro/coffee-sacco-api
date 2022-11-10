@@ -11,14 +11,19 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final ProductDeliveryRepository productDeliveryRepository;
+    private final BranchRepository branchRepository;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, ProductDeliveryRepository productDeliveryRepository) {
+    public MemberService(MemberRepository memberRepository, ProductDeliveryRepository productDeliveryRepository, BranchRepository branchRepository) {
         this.memberRepository = memberRepository;
         this.productDeliveryRepository = productDeliveryRepository;
+        this.branchRepository = branchRepository;
     }
 
     public Member createMember(Member member) {
+        Branch branch = branchRepository.findById(member.getBranch().getId())
+                .orElseThrow();
+        member.setBranch(branch);
         return memberRepository.save(member);
     }
 

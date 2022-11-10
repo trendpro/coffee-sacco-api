@@ -29,13 +29,13 @@ public class LoanController {
     @PutMapping(path = "{loanId}")
     public void update(
             @PathVariable("loanId") Long loanId,
-            @RequestParam(required = false) String status) {
+            @RequestParam(required = true) String status) {
         loanService.updateLoanStatus(loanId, status);
     }
 
     @PostMapping("/repay-loan")
     public void repayLoan(@RequestBody Map<String, Object> reqMap) {
-        Long loanId = (Long) reqMap.get("loanId");
+        Long loanId = ((Number) reqMap.get("loanId")).longValue();
 
         loanService.repayLoan(loanId);
     }

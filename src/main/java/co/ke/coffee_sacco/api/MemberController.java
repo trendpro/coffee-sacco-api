@@ -27,14 +27,14 @@ public class MemberController {
     }
 
     @GetMapping(path = "{memberId}")
-    public Member delete(@PathVariable("memberId") Long memberId) {
+    public Member show(@PathVariable("memberId") Long memberId) {
         return memberService.fetchMember(memberId);
     }
 
     @PostMapping("/deliver-product")
     public void deliverProduct(@RequestBody Map<String, Object> reqMap) {
-        Long memberId = (Long) reqMap.get("memberId");
-        double quantity = (double) reqMap.get("quantity");
+        Long memberId = ((Number) reqMap.get("memberId")).longValue();
+        double quantity = ((Number) reqMap.get("quantity")).doubleValue();
 
         memberService.deliverProduct(memberId, quantity);
     }

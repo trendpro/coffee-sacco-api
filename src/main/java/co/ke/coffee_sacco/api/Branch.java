@@ -23,6 +23,10 @@ public class Branch {
         this.name = name;
     }
 
+    public Branch(Long id) {
+        this.id = id;
+    }
+
     public Branch() {
     }
 

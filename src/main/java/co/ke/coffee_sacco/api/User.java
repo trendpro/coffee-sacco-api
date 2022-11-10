@@ -17,8 +17,8 @@ public class User {
     )
     @Column(updatable = false, nullable = false)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;
     private String role;
     private String name;

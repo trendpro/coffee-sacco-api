@@ -21,6 +21,9 @@ public class LoanService {
     }
 
     public Loan loanApplication(Loan loan) {
+        Member member = memberRepository.findById(loan.getMember().getId())
+                .orElseThrow();
+        loan.setMember(member);
         return loanRepository.save(loan);
     }
 

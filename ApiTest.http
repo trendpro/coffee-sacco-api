@@ -9,3 +9,140 @@ Content-Type: application/json
 {
     "name": "Kitui"
 }
+
+
+### updateBranch
+POST http://localhost:8080/api/v1/branches/1 HTTP/1.1
+Content-Type: application/json
+
+### createUser
+POST http://localhost:8080/api/v1/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"demo user",
+    "role": "admin",
+    "branch":{
+        "id": 1
+    }
+}
+
+### createMember
+POST http://localhost:8080/api/v1/members HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"demo member",
+    "branch":{
+        "id": 1
+    }
+}
+
+// output
+{
+    "id": 1,
+    "name": "demo member",
+    "branch": {
+        "id": 1,
+        "name": "Kitui"
+    },
+    "loanLimit": 0.0,
+    "accountBalance": 0.0,
+    "deliveredProductQuantity": 0.0
+}
+
+
+### listMembers
+GET http://localhost:8080/api/v1/members
+
+// output
+[
+    {
+        "id": 1,
+        "name": "demo member",
+        "branch": {
+            "id": 1,
+            "name": "Kitui"
+        },
+        "loanLimit": 0.0,
+        "accountBalance": 0.0,
+        "deliveredProductQuantity": 0.0
+    }
+]
+
+### get one member given ID
+GET http://localhost:8080/api/v1/members/1
+
+### deliver product
+POST http://localhost:8080/api/v1/members/deliver-product
+Content-Type: application/json
+
+{
+    "memberId": 1,
+    "quantity": 1000
+}
+
+### Sacco selling produce
+POST http://localhost:8080/api/v1/branches/sell-product
+Content-Type: application/json
+
+{
+    "sellingPrice":23
+}
+
+// This should update members who have delivered produce before
+{
+    "id": 1,
+    "name": "demo member",
+    "branch": {
+        "id": 1,
+        "name": "Kitui"
+    },
+    "loanLimit": 18400.0, // <-- updated
+    "accountBalance": 23000.0, // <-- updated
+    "deliveredProductQuantity": 0.0 // <-- updated
+}
+
+### make loan application
+POST http://localhost:8080/api/v1/loans
+Content-Type: application/json
+
+{
+    "member": {
+        "id": 1
+    },
+    "amount": 8000,
+    "loanDurationInMonths": 1,
+    "loanType": "cash"
+}
+
+// output
+{
+    "id": 1,
+    "member": {
+        "id": 1,
+        "name": "demo member",
+        "branch": {
+            "id": 1,
+            "name": "Kitui"
+        },
+        "loanLimit": 18400.0,
+        "accountBalance": 23000.0,
+        "deliveredProductQuantity": 0.0
+    },
+    "branch": null,
+    "amount": 8000.0,
+    "loanDurationInMonths": 1,
+    "loanStatus": "pending",
+    "loanType": "cash"
+}
+
+### get all loans
+GET http://localhost:8080/api/v1/loans
+
+## approve/reject a loan
+PUT http://localhost:8080/api/v1/loans/1?status=approved
+
+### repay loan
+POST http://localhost:8080/api/v1/loans/repay-loan
+Content-Type: application/json
