@@ -5,8 +5,6 @@ import javax.persistence.*;
 @Entity(name = "Branch")
 @Table(name = "branch")
 public class Branch {
-    private String name;
-
     @Id
     @SequenceGenerator(
             name = "branch_sequence",
@@ -19,6 +17,7 @@ public class Branch {
     )
     @Column(updatable = false, nullable = false)
     private Long id;
+    private String name;
 
     public Branch(String name) {
         this.name = name;

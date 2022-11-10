@@ -1,15 +1,17 @@
 package co.ke.coffee_sacco.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/branches")
 public class BranchController {
 
-    public final BranchService branchService;
+    private final BranchService branchService;
 
     @Autowired
     public BranchController(BranchService branchService) {
@@ -36,5 +38,13 @@ public class BranchController {
             @PathVariable("branchId") Long branchId,
             @RequestParam(required = true) String name) {
         branchService.updateBranch(branchId, name);
+    }
+
+    @PostMapping("/sale-product")
+    public void saleProduct(@RequestBody Map<String, Object> reqMap) {
+        double sellingPrice = (double) reqMap.get("sellingPrice");
+
+//        ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
+        branchService.saleProduct(sellingPrice);
     }
 }

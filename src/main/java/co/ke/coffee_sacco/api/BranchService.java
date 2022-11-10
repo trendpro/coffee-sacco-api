@@ -10,10 +10,14 @@ import java.util.Objects;
 @Service
 public class BranchService {
     private final BranchRepository branchRepository;
+    private final MemberRepository memberRepository;
+    private final ProductSaleRepository productSaleRepository;
 
     @Autowired
-    public BranchService(BranchRepository branchRepository) {
+    public BranchService(BranchRepository branchRepository, MemberRepository memberRepository, ProductSaleRepository productSaleRepository) {
         this.branchRepository = branchRepository;
+        this.memberRepository = memberRepository;
+        this.productSaleRepository = productSaleRepository;
     }
 
     public Branch createBranch(Branch branch) {
@@ -43,6 +47,36 @@ public class BranchService {
                 name.length() > 0 &&
                 !Objects.equals(branch.getName(), name)) {
             branch.setName(name);
+        }
+    }
+
+    @Transactional
+    public void saleProduct(double sellingPrice) {
+        List<Member> members = memberRepository.findAll();
+
+        for(Member member: members) {
+            double deliveredProductQuantity = member.getDeliveredProductQuantity();
+
+            if (deliveredProductQuantity <= 0) {
+                break;
+            }
+
+            // update account balance
+            member.setAccountBalance(deliveredProductQuantity * sellingPrice);
+
+            // decrement deliveredProductQuantity
+            member.setDeliveredProductQuantity(-deliveredProductQuantity);
+
+            // loan limit = 80% of accountLimit
+            member.setLoanLimit(0.8 * member.getAccountBalance());
+
+            // persist the sale in db
+            ProductSale productSale = new ProductSale(
+                    sellingPrice,
+                    deliveredProductQuantity,
+                    member.getBranch());
+
+            productSaleRepository.save(productSale);
         }
     }
 }
